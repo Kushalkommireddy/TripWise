@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Quintessential&display=swap');
+@import "tailwindcss";
+
+/* ---- Light: cream background, forest green text ---- */
+:root, [data-theme="light"] {
+  color-scheme: light;
+  --ink: #1e3a12;
+  --ink-muted: #5f7d42;
+  --paper: #faf6e9;
+  --surface: #fffdf6;
+  --surface-2: #f1ebd6;
+  --navy: #2d4a14;
+  --marigold: #ABEE56;
+  --teal: #3e6b1f;
+  --line: #e4dec6;
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --gold: #C6F135;
+}
+
+/* ---- Dark: deep midnight blue ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e8eef7;
+  --ink-muted: #93a3bb;
+  --paper: #0b1220;
+  --surface: #111a2e;
+  --surface-2: #1a2438;
+  --navy: #bcd3f5;
+  --marigold: #7fb2ff;
+  --teal: #8fd3e8;
+  --line: #233149;
+  --danger: #ff9e9e;
+  --danger-bg: #33161c;
+  --gold: #ffc857;
+}
+
+/* ---- Travel mode: dark base, muted pastel accent cycles on click via JS ---- */
+[data-theme="travel"] {
+  color-scheme: dark;
+  --ink: #f0ede8;
+  --ink-muted: #a89f97;
+  --paper: #0f0e12;
+  --surface: #191720;
+  --surface-2: #211f29;
+  --navy: var(--travel-accent, #d8a8b0);
+  --marigold: var(--travel-accent-2, #e8cfa0);
+  --teal: var(--travel-accent, #d8a8b0);
+  --line: #2e2b36;
+  --danger: #e8a0a0;
+  --danger-bg: #2a1414;
+  --gold: var(--travel-accent, #d8a8b0);
+}
+
+* { border-color: var(--line); }
+
+html { color-scheme: light dark; scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', ui-sans-serif, sans-serif;
+  transition: background 0.5s ease, color 0.5s ease;
+  animation: pageIn 0.6s ease both;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@layer components {
+.font-display { font-family: 'Quintessential', 'Bricolage Grotesque', ui-sans-serif, serif; font-weight: 400; letter-spacing: 0.01em; }
+.font-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+.surface { background: var(--surface); }
+
+.ticket {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 14px;
+  transition: background 0.4s ease, border-color 0.4s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.ticket:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -12px rgba(0,0,0,0.25);
+  border-color: var(--gold);
+}
+.ticket::before, .ticket::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--paper);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background 0.4s ease;
+}
+.ticket::before { left: -9px; }
+.ticket::after { right: -9px; }
+@media (max-width: 480px) {
+  .ticket::before, .ticket::after { display: none; }
+}
+.perforated {
+  border-top: 1px dashed var(--line);
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 20%, transparent); }
+.input::placeholder { color: var(--ink-muted); }
+
+.btn-primary {
+  background: var(--navy);
+  color: white;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 18px -8px rgba(0,0,0,0.35);
+}
+.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 12px 24px -10px rgba(0,0,0,0.45); }
+.btn-primary:active { transform: translateY(0); }
+[data-theme="dark"] .btn-primary, [data-theme="travel"] .btn-primary { color: #0a0a0a; font-weight: 600; }
+
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { height: 6px; width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+/* Scroll-reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Destination hero cards */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dest-card {
+  animation: cardIn 0.6s ease both;
+}
+.dest-card:nth-child(2) { animation-delay: 0.08s; }
+.dest-card:nth-child(3) { animation-delay: 0.16s; }
+.dest-card:nth-child(4) { animation-delay: 0.24s; }
+.dest-card:nth-child(5) { animation-delay: 0.32s; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.glow-btn {
+  position: relative;
+  overflow: hidden;
+}
+.glow-btn::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 2.8s linear infinite;
+}
+
+.ticket {
+  animation: cardIn 0.5s ease both;
+}
+
+/* Animated budget progress bar */
+.budget-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.budget-bar > div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Typewriter caret */
+.caret::after {
+  content: "|";
+  animation: blink 1s step-start infinite;
+  color: var(--gold);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Floating badge pulse */
+@keyframes softPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.floaty { animation: softPulse 4s ease-in-out infinite; }
+.dest-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  cursor: pointer;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.dest-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 40px -16px rgba(0,0,0,0.4); }
+.dest-card-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.75) 100%);
+}
+.dest-card-label {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 16px;
+  color: white;
+}
+}
